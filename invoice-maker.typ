@@ -198,7 +198,7 @@
   )
 
 #let invoice(
-  language: "en",
+  language: "de",
   currency: "CHF",
   country: none,
   title: none,
@@ -300,13 +300,6 @@
   set table() // TODO: put back stroke: none
 
 
-  text(weight: "bold", size: 2em)[
-    #(if title != none { title } else {
-      if cancellation-id != none { t.cancellation-invoice }
-      else { t.invoice }
-    })
-  ]
-
   let invoice-id-norm = if invoice-id != none {
           if cancellation-id != none { cancellation-id }
           else { invoice-id }
@@ -323,14 +316,30 @@
       format-date(delivery-date)
     } else { delivery-date }
 
-  table(
-    columns: 2,
-    align: (right, left),
-    inset: 4pt,
-    [#t.invoice-id:], [*#invoice-id-norm*],
-    [#t.issuing-date:], [*#issuing-date-display*],
-    [#t.delivery-date:], [*#delivery-date-display*],
+  grid(
+    columns: (1fr, 1fr),
+    align: (left, right),
+
+    stack(
+      spacing: 1.5em,
+      text(weight: "bold", size: 2em)[
+        #(if title != none { title } else {
+          if cancellation-id != none { t.cancellation-invoice }
+          else { t.invoice }
+      })],
+      table(
+        columns: 2,
+        align: (right, left),
+        inset: 4pt,
+        [#t.invoice-id:], [*#invoice-id-norm*],
+        [#t.issuing-date:], [*#issuing-date-display*],
+        [#t.delivery-date:], [*#delivery-date-display*],
+      )
+    ),
+    banner-image
   )
+
+
 
   v(0.5em)
 
@@ -513,6 +522,7 @@
     align(center,
       block(width: 100%,
         swiss-qr-bill(
+          language: t.id,
           account: "CH4431999123000889012",
           creditor-name: "Max Muster & Söhne",
           creditor-street: "Musterstrasse",

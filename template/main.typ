@@ -3,9 +3,9 @@
 // TODO: Handle reverse charges correctly
 
 #show: invoice.with(
-  language: "de", // or "de"
-  banner-image: image("banner.png"),
-  title: "Beispielsrechnung mit längerem Titel",
+  language: "de", // or "fr", "en" (italian contribution is welcome!)
+  banner-image: image("banner.png", width: 12em),
+  title: "Rechnung",
   // // Uncomment this to create a cancellation invoice
   // cancellation-id: "2024-03-24t210835",
   issuing-date: "2024-03-10",
