@@ -1,7 +1,7 @@
 #import "@preview/payqr-swiss:0.4.1": swiss-qr-bill
 #let nbh = "‑"
 
-// TODO: Add banner image
+// TODO: check how it could be used outside of switzerland
 
 // Truncate a number to 2 decimal places
 // and add trailing zeros if necessary
@@ -125,7 +125,7 @@
       no-vat: "Not Subject to VAT",
       total: "Total",
       due-text: val =>
-        [Please transfer the money onto following bank account due to *#val*:],
+        [Please transfer the money onto following bank account due to *#val*.],
       owner: "Owner",
       iban: "IBAN",
     ),
@@ -158,7 +158,7 @@
       no-vat: "Non sujet à la TVA",
       total: "Total",
       due-text: val =>
-        [Merci de régler d’ici le *#val* par virement au compte bancaire suivant:],
+        [Merci de régler d’ici le *#val* par virement au compte bancaire suivant.],
       owner: "Titulaire",
       iban: "IBAN",
     ),
@@ -219,6 +219,25 @@
   vat-always: false, // Always charge VAT (even if reverse charge applies)
   data: none,
   override-translation: none,
+  qr_opts: (
+    account: none,
+    creditor-name: none,
+    creditor-street: none,
+    creditor-building: none,
+    creditor-postal-code: none,
+    creditor-city: none,
+    creditor-country: none,
+    reference-type: none,  // QRR, SCOR, or NON
+    reference: none,
+    // optional
+    debtor-name: none,
+    debtor-street: none,
+    debtor-building: none,
+    debtor-postal-code: none,
+    debtor-city: none,
+    debtor-country: none,
+    additional-info: none,
+  ),
   doc,
 ) = {
   // Set styling defaults
@@ -227,7 +246,7 @@
   styling.margin = styling.at("margin", default: (
     top: 20mm,
     right: 25mm,
-    bottom: 20mm,
+    bottom: 5mm,
     left: 25mm,
   ))
 
@@ -297,8 +316,7 @@
     font: if styling.font == none { "libertinus serif" } else { styling.font },
     size: styling.font-size,
   )
-  set table() // TODO: put back stroke: none
-
+  set table(stroke: none)
 
   let invoice-id-norm = if invoice-id != none {
           if cancellation-id != none { cancellation-id }
@@ -338,8 +356,6 @@
     ),
     banner-image
   )
-
-
 
   v(0.5em)
 
@@ -515,37 +531,38 @@
     align(center, strong(t.closing))
   }
   doc // TODO put somewhere else maybe?
-  context place(
-    bottom,
-    float: true,
-    dy: page.margin.bottom,
-    align(center,
-      block(width: 100%,
-        swiss-qr-bill(
-          language: t.id,
-          account: "CH4431999123000889012",
-          creditor-name: "Max Muster & Söhne",
-          creditor-street: "Musterstrasse",
-          creditor-building: "123",
-          creditor-postal-code: "8000",
-          creditor-city: "Seldwyla",
-          creditor-country: "CH",
-          amount: 1949.75,
-          currency: "CHF",
-          debtor-name: "Simon Muster",
-          debtor-street: "Musterstrasse",
-          debtor-building: "1",
-          debtor-postal-code: "8000",
-          debtor-city: "Seldwyla",
-          debtor-country: "CH",
-          reference-type: "QRR",  // QRR, SCOR, or NON
-          reference: "210000000003139471430009017",
-          additional-info: "Bestellung vom 15.10.2020"
+
+  // -------------- QR Code --------------
+  if qr_opts.at("account", default: none) != none {
+    if "amount" in qr_opts and qr_opts.at("amount") != none {
+      panic("Do not set qr_opts.amount; it is calculated from the invoice total.")
+    }
+    if "currency" in qr_opts and qr_opts.at("currency") != none {
+      panic("Do not set qr_opts.currency; it is copied from the currency parameter.")
+    }
+    if "language" in qr_opts and qr_opts.at("language") != none {
+      panic("Do not set qr_opts.language; it is copied from the currency parameter.")
+    }
+    context place(
+      bottom,
+      float: true,
+      dy: page.margin.bottom + 10mm,
+      align(center,
+        block(width: 100%,
+          swiss-qr-bill(
+            language: t.id,
+            ..qr_opts,
+            currency: if currency == "€" { "EUR" } else { currency },
+            standalone: false,
+            font: "auto",
+            amount: total,
+          )
         )
       )
     )
+  }
 
-  )
+
 
 
 }

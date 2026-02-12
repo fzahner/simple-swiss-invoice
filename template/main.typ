@@ -4,14 +4,15 @@
 
 #show: invoice.with(
   language: "de", // or "fr", "en" (italian contribution is welcome!)
-  banner-image: image("banner.png", width: 12em),
+  currency: "CHF", // CHF, EUR, €
   title: "Rechnung",
-  // // Uncomment this to create a cancellation invoice
-  // cancellation-id: "2024-03-24t210835",
+  banner-image: image("banner.png", width: 12em),
+  invoice-id: "custom-id-1234", // optional, auto-generated with date if not specified
+  // cancellation-id: "2024-03-24t210835,  // Uncomment this to create a cancellation invoice
   issuing-date: "2024-03-10",
   delivery-date: "2024-02-29",
-  vat: 0, // 0.081,
   due-date: "2024-03-20",
+  vat: 0, // or 0.081
   biller: (
     name: "Gyro Gearloose",
     title: "Inventor",
@@ -37,7 +38,6 @@
   hourly-rate: 100, // For any items with `dur-min` but no `price`
   items: (
     (
-      // number: 3, // You can also specify a custom item number
       date: "2016-04-03",
       description: "Arc reactor",
       // dur-min: 0, Either specify `dur-min` or `quantity` & `price`
@@ -46,17 +46,8 @@
     ),
     (
       date: "2016-04-05",
-      description: "Flux capacitor",
-      dur-min: 0,
-      quantity: 1,
-      price: 27000,
-    ),
-    (
-      date: "2016-04-07",
-      description: "Lightsaber",
-      dur-min: 0,
-      quantity: 2,
-      price: 3600,
+      description: "Building flux capacitor",
+      dur-min: 120,
     ),
     (
       date: "2016-04-08",
@@ -65,5 +56,25 @@
       quantity: 10,
       price: 800,
     ),
+  ),
+  qr_opts: (
+    // required
+    account: "CH4431999123000889012",
+    creditor-name: "Maximilian Muster & Söhne",
+    creditor-street: "Musterstrasse",
+    creditor-building: "123",
+    creditor-postal-code: "8000",
+    creditor-city: "Seldwyla",
+    creditor-country: "CH",
+    reference-type: "QRR",  // QRR, SCOR, or NON
+    reference: "210000000003139471430009017",
+    // optional
+    debtor-name: "Simon Muster",
+    debtor-street: "Musterstrasse",
+    debtor-building: "1",
+    debtor-postal-code: "8000",
+    debtor-city: "Seldwyla",
+    debtor-country: "CH",
+    additional-info: "Bestellung vom 15.10.2020",
   ),
 )

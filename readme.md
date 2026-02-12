@@ -1,6 +1,6 @@
 # Invoice Maker
 
-Generate beautiful invoices from a simple data record.
+Generate invoices with a swiss QR code payment.
 
 <a href="./fixtures/expected-en.pdf">
   <img
@@ -10,47 +10,13 @@ Generate beautiful invoices from a simple data record.
   >
 </a>
 
-
-## Features
-
-- **Simple, yet Powerful**
-    - Write invoices as simple `.typ` or `.yaml` files
-    - No need to install anything but [Typst]
-    - Support for cancellations, discounts, and taxes
-- **Multilingual**
-    - Integrated support for English, French, and German
-    - Easy to add more languages by adding a translation dictionary
-        (Check out this example:
-        [custom-language.typ](./examples/custom-language.typ))
-- **Customizable**
-    - User your own banner image
-    - Customize the colors and fonts
-- **Elegant**
-    - Modern design with a focus on readability
-    - PDFs with a professional look
-- **Stable**
-    - Visual regression tests to ensure consistent output
-- **Free and Open Source**
-    - ISC License
-
-[Typst]: https://typst.app
-
-
 ## Installation & Usage
 
-1. Download the [invoice-maker.typ](./invoice-maker.typ) file
-1. Create a new `invoice.typ` file.
-    E.g. based on one of the examples below:
-    - [English example](./examples/en.typ)
-    - [French example](./examples/fr.typ)
-    - [German example](./examples/de.typ)
-    - [YAML example](./examples/load-yaml.typ)
-1. Run typst to generate the invoice:
-    ```sh
-    typst compile invoice.typ
-    ```
-1. Use the generated `invoice.pdf` file 🎉
+## Parameters
 
+> The QR code section can be removed by not setting any qr_opts.
+
+For all parameters regarding the QR code invoice, see the parameters [of the PayQR Swiss Typst package](https://github.com/philippdrebes/typst-payqr-swiss/tree/v0.4.1?tab=readme-ov-file#parameters).
 
 ## Development
 
@@ -59,7 +25,6 @@ Run Tests:
 ```sh
 make test
 ```
-
 
 ## Legacy Version
 
