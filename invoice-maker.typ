@@ -1,3 +1,4 @@
+#import "@preview/payqr-swiss:0.4.1": swiss-qr-bill
 #let nbh = "‑"
 
 // Truncate a number to 2 decimal places
@@ -45,6 +46,22 @@
     month: int(parts.at(1)),
     day: int(parts.at(2)),
   )
+}
+
+#let format-date = (date-str) => {
+  let parts = date-str.split("-")
+  if parts.len() != 3 {
+    panic(
+      "Invalid date string: " + date-str + "\n" +
+      "Expected format: YYYY-MM-DD"
+    )
+  }
+  let yyyy = parts.at(0)
+  let mm = parts.at(1)
+  let dd = parts.at(2)
+  let mm2 = if mm.len() == 1 { "0" + mm } else { mm }
+  let dd2 = if dd.len() == 1 { "0" + dd } else { dd }
+  dd2 + "." + mm2 + "." + yyyy
 }
 
 #let TODO = box(
@@ -104,7 +121,6 @@
       discount-of: "Discount of",
       vat: "VAT of",
       no-vat: "Not Subject to VAT",
-      reverse-charge: "Reverse Charge",
       total: "Total",
       due-text: val =>
         [Please transfer the money onto following bank account due to *#val*:],
@@ -138,7 +154,6 @@
       discount-of: "Remise de",
       vat: "TVA",
       no-vat: "Non sujet à la TVA",
-      reverse-charge: "Facturation inversée",
       total: "Total",
       due-text: val =>
         [Merci de régler d’ici le *#val* par virement au compte bancaire suivant:],
@@ -172,7 +187,6 @@
       discount-of: "Rabatt von",
       vat: "MwSt. von",
       no-vat: "Nicht Mehrwertsteuerpflichtig",
-      reverse-charge: "Steuerschuldnerschaft des\nLeistungsempfängers",
       total: "Gesamt",
       due-text: val =>
         [Bitte überweisen Sie den Betrag bis *#val* auf folgendes Konto:],
@@ -207,7 +221,7 @@
 ) = {
   // Set styling defaults
   styling.font = styling.at("font", default: "Liberation Sans")
-  styling.font-size = styling.at("font-size", default: 11pt)
+  styling.font-size = styling.at("font-size", default: 10pt)
   styling.margin = styling.at("margin", default: (
     top: 20mm,
     right: 25mm,
@@ -263,6 +277,9 @@
   let signature = ""
   let issuing-date = if issuing-date != none { issuing-date }
         else { datetime.today().display("[year]-[month]-[day]") }
+  let issuing-date-display = if issuing-date != none and type(issuing-date) == str {
+      format-date(issuing-date)
+    } else { issuing-date }
 
   set document(
     title: title,
@@ -273,50 +290,44 @@
     margin: styling.margin,
     numbering: none,
   )
-  set par(justify: true)
   set text(
     lang: t.id,
     font: if styling.font == none { "libertinus serif" } else { styling.font },
     size: styling.font-size,
   )
-  set table(stroke: none)
+  set table() // TODO: put back stroke: none
 
-  // Offset page top margin for banner image
-  [#pad(top: -20mm, banner-image)]
 
-  align(center)[#block(inset: 2em)[
-    #text(weight: "bold", size: 2em)[
-      #(if title != none { title } else {
-        if cancellation-id != none { t.cancellation-invoice }
-        else { t.invoice }
-      })
-    ]
-  ]]
+  text(weight: "bold", size: 2em)[
+    #(if title != none { title } else {
+      if cancellation-id != none { t.cancellation-invoice }
+      else { t.invoice }
+    })
+  ]
 
   let invoice-id-norm = if invoice-id != none {
           if cancellation-id != none { cancellation-id }
           else { invoice-id }
         }
         else {
-          TODO
-          // TODO: Reactivate after Typst supports hour, minute, and second
-          // datetime
-          //   .today()
-          //   .display("[year]-[month]-[day]t[hour][minute][second]")
+          datetime
+            .today()
+            .display("[year][month][day]")
         }
 
   let delivery-date = if delivery-date != none { delivery-date }
         else { TODO }
+  let delivery-date-display = if delivery-date != none and type(delivery-date) == str {
+      format-date(delivery-date)
+    } else { delivery-date }
 
-  align(center,
-    table(
-      columns: 2,
-      align: (right, left),
-      inset: 4pt,
-      [#t.invoice-id:], [*#invoice-id-norm*],
-      [#t.issuing-date:], [*#issuing-date*],
-      [#t.delivery-date:], [*#delivery-date*],
-    )
+  table(
+    columns: 2,
+    align: (right, left),
+    inset: 4pt,
+    [#t.invoice-id:], [*#invoice-id-norm*],
+    [#t.issuing-date:], [*#issuing-date-display*],
+    [#t.delivery-date:], [*#delivery-date-display*],
   )
 
   v(2em)
@@ -324,29 +335,25 @@
   box(height: 12em)[
     #columns(2, gutter: 4em)[
       === #t.recipient
-      #v(0.5em)
+      #v(0.3em)
       #recipient.name \
       #{if "title" in recipient { [#recipient.title \ ] }}
       #{if "country" in recipient.address { [#recipient.address.country \ ] }}
       #recipient.address.city #recipient.address.postal-code \
       #recipient.address.street \
-      #{if recipient.vat-id.starts-with("DE"){"USt-IdNr.:"}}
-        #recipient.vat-id
 
       === #t.biller
-      #v(0.5em)
+      #v(0.3em)
       #biller.name \
       #{if "title" in biller { [#biller.title \ ] }}
       #{if "country" in biller.address { [#biller.address.country \ ] }}
       #biller.address.city #biller.address.postal-code \
       #biller.address.street \
-      #{if biller.vat-id.starts-with("DE"){"USt-IdNr.:"}}
-        #biller.vat-id
     ]
   ]
 
   if cancellation-id != none {
-    (t.cancellation-notice)(invoice-id, issuing-date)
+    (t.cancellation-notice)(invoice-id, issuing-date-display)
   }
 
   [== #t.items]
@@ -395,7 +402,7 @@
 
         (
           row.at("number", default: index + 1),
-          row.date,
+          format-date(row.date),
           row.description,
           str(if dur-min == 0 { "" } else { dur-min }),
           str(row.at("quantity", default: if dur-min == 0 { "1" } else { "" })),
@@ -434,10 +441,7 @@
       }
       else { panic(["#discount.type" is no valid discount type]) }
     }
-  let has-reverse-charge = {
-        (biller.vat-id.slice(0, 2) != recipient.vat-id.slice(0, 2)) and not vat-always
-      }
-  let tax = if has-reverse-charge { 0 } else { sub-total * vat }
+  let tax =  sub-total * vat
   let total = sub-total - discount-value + tax
 
   let table-entries = (
@@ -455,15 +459,12 @@
         [-#add-zeros(cancel-neg * discount-value) #currency]
       )
     },
-    if not has-reverse-charge and (vat != 0) {
+    if vat != 0 {
       ([#t.vat #{vat * 100} %:],
         [#{add-zeros(cancel-neg * tax)} #currency]
       )
     },
     if (vat == 0) {([#t.no-vat], [ ])},
-    if (has-reverse-charge) {
-      ([#t.vat:], text(0.9em)[#t.reverse-charge])
-    },
     (
       [*#t.total*:],
       [*#add-zeros(cancel-neg * total) #currency*]
@@ -496,7 +497,7 @@
               .display("[year]-[month]-[day]")
           }
 
-    (t.due-text)(due-date)
+    (t.due-text)(format-date(due-date))
 
     v(1em)
     align(center)[
@@ -529,6 +530,26 @@
     v(1em)
     align(center, strong(t.closing))
   }
+  doc // TODO put somewhere else maybe?
+  swiss-qr-bill(
+  account: "CH4431999123000889012",
+  creditor-name: "Max Muster & Söhne",
+  creditor-street: "Musterstrasse",
+  creditor-building: "123",
+  creditor-postal-code: "8000",
+  creditor-city: "Seldwyla",
+  creditor-country: "CH",
+  amount: 1949.75,
+  currency: "CHF",
+  debtor-name: "Simon Muster",
+  debtor-street: "Musterstrasse",
+  debtor-building: "1",
+  debtor-postal-code: "8000",
+  debtor-city: "Seldwyla",
+  debtor-country: "CH",
+  reference-type: "QRR",  // QRR, SCOR, or NON
+  reference: "210000000003139471430009017",
+  additional-info: "Bestellung vom 15.10.2020"
+  )
 
-  doc
 }

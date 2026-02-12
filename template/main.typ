@@ -1,9 +1,11 @@
-#import "@preview/invoice-maker:1.1.0": *
+#import "../invoice-maker.typ": *
+
+// TODO: Handle reverse charges correctly
 
 #show: invoice.with(
-  language: "en", // or "de"
+  language: "de", // or "de"
   banner-image: image("banner.png"),
-  invoice-id: "2024-03-10t172205",
+  title: "Beispielsrechnung mit längerem Titel",
   // // Uncomment this to create a cancellation invoice
   // cancellation-id: "2024-03-24t210835",
   issuing-date: "2024-03-10",
@@ -13,7 +15,6 @@
     name: "Gyro Gearloose",
     title: "Inventor",
     company: "Crazy Inventions Ltd.",
-    vat-id: "DL1234567",
     iban: "DE89370400440532013000",
     address: (
       country: "Disneyland",
@@ -26,7 +27,6 @@
   recipient: (
     name: "Scrooge McDuck",
     title: "Treasure Hunter",
-    vat-id: "DL7654321",
     address: (
       country: "Disneyland",
       city: "Duckburg",
