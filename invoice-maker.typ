@@ -1,6 +1,8 @@
 #import "@preview/payqr-swiss:0.4.1": swiss-qr-bill
 #let nbh = "‑"
 
+// TODO: Add banner image
+
 // Truncate a number to 2 decimal places
 // and add trailing zeros if necessary
 // E.g. 1.234 -> 1.23, 1.2 -> 1.20
@@ -500,29 +502,6 @@
     (t.due-text)(format-date(due-date))
 
     v(1em)
-    align(center)[
-      #table(
-        fill: grayish,
-        // stroke: 1pt + blue,
-        // columns: 2, // TODO: Doesn't work for unknown reason
-        columns: (8em, auto),
-        inset: (col, row) =>
-          if col == 0 {
-            if row == 0 { (top: 1.2em, right: 0.6em, bottom: 0.6em) }
-            else { (top: 0.6em, right: 0.6em, bottom: 1.2em) }
-          }
-          else {
-            if row == 0 { (top: 1.2em, right: 2em, bottom: 0.6em, left: 0.6em) }
-            else { (top: 0.6em, right: 2em, bottom: 1.2em, left: 0.6em) }
-          },
-        align: (col, row) => (right,left,).at(col),
-        table.hline(stroke: 0.5pt),
-        [#t.owner:], [*#biller.name*],
-        [#t.iban:], [*#biller.iban*],
-        table.hline(stroke: 0.5pt),
-      )
-    ]
-    v(1em)
 
     t.closing
   }
@@ -531,25 +510,36 @@
     align(center, strong(t.closing))
   }
   doc // TODO put somewhere else maybe?
-  swiss-qr-bill(
-  account: "CH4431999123000889012",
-  creditor-name: "Max Muster & Söhne",
-  creditor-street: "Musterstrasse",
-  creditor-building: "123",
-  creditor-postal-code: "8000",
-  creditor-city: "Seldwyla",
-  creditor-country: "CH",
-  amount: 1949.75,
-  currency: "CHF",
-  debtor-name: "Simon Muster",
-  debtor-street: "Musterstrasse",
-  debtor-building: "1",
-  debtor-postal-code: "8000",
-  debtor-city: "Seldwyla",
-  debtor-country: "CH",
-  reference-type: "QRR",  // QRR, SCOR, or NON
-  reference: "210000000003139471430009017",
-  additional-info: "Bestellung vom 15.10.2020"
+  context place(
+    bottom,
+    float: true,
+    dy: page.margin.bottom,
+    align(center,
+      block(width: 100%,
+        swiss-qr-bill(
+          account: "CH4431999123000889012",
+          creditor-name: "Max Muster & Söhne",
+          creditor-street: "Musterstrasse",
+          creditor-building: "123",
+          creditor-postal-code: "8000",
+          creditor-city: "Seldwyla",
+          creditor-country: "CH",
+          amount: 1949.75,
+          currency: "CHF",
+          debtor-name: "Simon Muster",
+          debtor-street: "Musterstrasse",
+          debtor-building: "1",
+          debtor-postal-code: "8000",
+          debtor-city: "Seldwyla",
+          debtor-country: "CH",
+          reference-type: "QRR",  // QRR, SCOR, or NON
+          reference: "210000000003139471430009017",
+          additional-info: "Bestellung vom 15.10.2020"
+        )
+      )
+    )
+
   )
+
 
 }
