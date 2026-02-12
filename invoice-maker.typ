@@ -79,7 +79,7 @@
 #let languages = (
     en: (
       id: "en",
-      country: "GB",
+      country: "CH",
       recipient: "Recipient",
       biller: "Biller",
       invoice: "Invoice",
@@ -113,7 +113,7 @@
     ),
     fr: (
       id: "fr",
-      country: "FR",
+      country: "CH",
       recipient: "Destinataire",
       biller: "Émetteur",
       invoice: "Facture",
@@ -147,7 +147,7 @@
     ),
     de: (
       id: "de",
-      country: "DE",
+      country: "CH",
       recipient: "Empfänger",
       biller: "Aussteller",
       invoice: "Rechnung",
@@ -170,12 +170,12 @@
       total-time: "Gesamtarbeitszeit",
       subtotal: "Zwischensumme",
       discount-of: "Rabatt von",
-      vat: "Umsatzsteuer von",
-      no-vat: "Nicht Umsatzsteuerpflichtig",
+      vat: "MwSt. von",
+      no-vat: "Nicht Mehrwertsteuerpflichtig",
       reverse-charge: "Steuerschuldnerschaft des\nLeistungsempfängers",
       total: "Gesamt",
       due-text: val =>
-        [Bitte überweise den Betrag bis *#val* auf folgendes Konto:],
+        [Bitte überweisen Sie den Betrag bis *#val* auf folgendes Konto:],
       owner: "Inhaber",
       iban: "IBAN",
     ),
@@ -183,7 +183,7 @@
 
 #let invoice(
   language: "en",
-  currency: "€",
+  currency: "CHF",
   country: none,
   title: none,
   banner-image: none,
@@ -199,7 +199,7 @@
   styling: (:), // font, font-size, margin (sets defaults below)
   items: (),
   discount: none,
-  vat: 0.19,
+  vat: 0.081,
   vat-always: false, // Always charge VAT (even if reverse charge applies)
   data: none,
   override-translation: none,
