@@ -177,7 +177,7 @@
       issuing-date: "Ausstellungsdatum",
       delivery-date: "Lieferdatum",
       items: "Leistungen",
-      closing: "Vielen Dank für die gute Zusammenarbeit!",
+      closing: "Vielen Dank für Ihr Vertrauen!",
       number: "Nr",
       date: "Datum",
       description: "Beschreibung",
@@ -191,7 +191,7 @@
       no-vat: "Nicht Mehrwertsteuerpflichtig",
       total: "Gesamt",
       due-text: val =>
-        [Bitte überweisen Sie den Betrag bis *#val* auf folgendes Konto:],
+        [Bitte überweisen Sie den Betrag bis *#val* auf das folgende Konto.],
       owner: "Inhaber",
       iban: "IBAN",
     ),
@@ -215,7 +215,7 @@
   styling: (:), // font, font-size, margin (sets defaults below)
   items: (),
   discount: none,
-  vat: 0.081,
+  vat: 0,
   vat-always: false, // Always charge VAT (even if reverse charge applies)
   data: none,
   override-translation: none,
@@ -332,9 +332,9 @@
     [#t.delivery-date:], [*#delivery-date-display*],
   )
 
-  v(2em)
+  v(0.5em)
 
-  box(height: 12em)[
+  box(height: 8em)[
     #columns(2, gutter: 4em)[
       === #t.recipient
       #v(0.3em)
@@ -360,7 +360,7 @@
 
   [== #t.items]
 
-  v(1em)
+  v(0.5em)
 
   let getRowTotal = row => {
     if row.at("dur-min", default: 0) == 0 {
@@ -499,11 +499,7 @@
               .display("[year]-[month]-[day]")
           }
 
-    (t.due-text)(format-date(due-date))
-
-    v(1em)
-
-    t.closing
+    (t.due-text)(format-date(due-date))+ " " +   t.closing
   }
   else {
     v(1em)

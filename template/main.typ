@@ -10,6 +10,7 @@
   // cancellation-id: "2024-03-24t210835",
   issuing-date: "2024-03-10",
   delivery-date: "2024-02-29",
+  vat: 0, // 0.081,
   due-date: "2024-03-20",
   biller: (
     name: "Gyro Gearloose",
@@ -23,7 +24,6 @@
       street: "Inventor Drive 23",
     ),
   ),
-  hourly-rate: 100, // For any items with `dur-min` but no `price`
   recipient: (
     name: "Scrooge McDuck",
     title: "Treasure Hunter",
@@ -34,6 +34,7 @@
       street: "Killmotor Hill 1",
     )
   ),
+  hourly-rate: 100, // For any items with `dur-min` but no `price`
   items: (
     (
       // number: 3, // You can also specify a custom item number
@@ -64,12 +65,5 @@
       quantity: 10,
       price: 800,
     ),
-    (
-      date: "2016-04-12",
-      description: "Assembly",
-      dur-min: 160,
-      quantity: 1,
-      price: 53.33,
-     )
   ),
 )
