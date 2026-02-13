@@ -1,17 +1,17 @@
 [package]
-authors = ["Adrian Sieber <@ad-si>"]
+authors = ["Fabio Zahner"]
 categories = ["office"]
-description = "Generate beautiful invoices from a simple data record."
+description = "Generate simple invoices with swiss payment QR code."
 disciplines = ["business"]
 entrypoint = "invoice-maker.typ"
-exclude = ["*.pdf", "fixtures", "images", "typescript_pandoc"]
+exclude = ["*.pdf"]
 keywords = ["invoice", "accounting", "finance", "money"]
 license = "ISC"
 name = "invoice-maker"
-repository = "https://github.com/ad-si/invoice-maker"
+repository = "https://github.com/fzahner/simple-swiss-invoice"
 version = "1.0.0"
 
 [template]
 entrypoint = "main.typ"
 path = "template"
-thumbnail = "images/example-invoice-hq.png"
+thumbnail = "images/main.png"

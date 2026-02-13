@@ -219,23 +219,11 @@
   vat-always: false, // Always charge VAT (even if reverse charge applies)
   data: none,
   override-translation: none,
+  qr-code: true,
   qr_opts: (
-    account: none,
-    creditor-name: none,
-    creditor-street: none,
-    creditor-building: none,
-    creditor-postal-code: none,
-    creditor-city: none,
-    creditor-country: none,
     reference-type: none,  // QRR, SCOR, or NON
     reference: none,
     // optional
-    debtor-name: none,
-    debtor-street: none,
-    debtor-building: none,
-    debtor-postal-code: none,
-    debtor-city: none,
-    debtor-country: none,
     additional-info: none,
   ),
   doc,
@@ -365,17 +353,17 @@
       #v(0.3em)
       #recipient.name \
       #{if "title" in recipient { [#recipient.title \ ] }}
-      #{if "country" in recipient.address { [#recipient.address.country \ ] }}
-      #recipient.address.city #recipient.address.postal-code \
       #recipient.address.street \
+      #recipient.address.city #recipient.address.postal-code \
+      #{if "country" in recipient.address { [#recipient.address.country \ ] }}
 
       === #t.biller
       #v(0.3em)
       #biller.name \
       #{if "title" in biller { [#biller.title \ ] }}
-      #{if "country" in biller.address { [#biller.address.country \ ] }}
-      #biller.address.city #biller.address.postal-code \
       #biller.address.street \
+      #biller.address.city #biller.address.postal-code \
+      #{if "country" in biller.address { [#biller.address.country \ ] }}
     ]
   ]
 
@@ -533,7 +521,7 @@
   doc // TODO put somewhere else maybe?
 
   // -------------- QR Code --------------
-  if qr_opts.at("account", default: none) != none {
+  if qr-code {
     if "amount" in qr_opts and qr_opts.at("amount") != none {
       panic("Do not set qr_opts.amount; it is calculated from the invoice total.")
     }
@@ -551,6 +539,18 @@
         block(width: 100%,
           swiss-qr-bill(
             language: t.id,
+            account: biller.iban,
+            creditor-name: biller.name,
+            creditor-street: biller.address.street,
+            creditor-postal-code: biller.address.postal-code,
+            creditor-city: biller.address.city,
+            creditor-country: biller.address.country,
+            debtor-name: recipient.name,
+            debtor-street: recipient.address.street,
+            debtor-postal-code: recipient.address.postal-code,
+            debtor-city: recipient.address.city,
+            debtor-country: recipient.address.country,
+
             ..qr_opts,
             currency: if currency == "€" { "EUR" } else { currency },
             standalone: false,
