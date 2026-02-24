@@ -6,7 +6,14 @@ Generate simple, clean invoices with a (optional) swiss invoice QR code.
 
 ## Installation & Usage
 
-#TODO
+- Download the `invoice-maker.typ` file and the `tempate/main.typ file`.
+- In the template folder, run typst to generate the invoice:
+
+```sh
+typst compile main.typ --root ..
+```
+
+- View the generated PDF file.
 
 ## Parameters
 
