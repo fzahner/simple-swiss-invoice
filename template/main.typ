@@ -12,7 +12,7 @@
   issuing-date: "2024-03-10",
   delivery-date: "2024-02-29",
   due-date: "2024-03-20",
-  vat: 0, // or 0.081
+  vat: 0.081, // or 0
   biller: (
     name: "Gyro Gearloose",
     title: "Inventor",
