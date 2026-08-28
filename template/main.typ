@@ -57,6 +57,7 @@
       price: 800,
     ),
   ),
+  qr-code: true,
   qr_opts: (
     // required
     account: "CH4431999123000889012",

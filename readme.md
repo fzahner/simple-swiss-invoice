@@ -64,6 +64,7 @@ Almost all of these parameters are optional and include sensible defaults or opt
     ),
   ),
   override-translation: none // allows to override specific translation keys with a dict
+  qr-code: true,
   qr_opts: (
     // required
     account: "CH4431999123000889012",
@@ -87,7 +88,7 @@ Almost all of these parameters are optional and include sensible defaults or opt
 ```
 
 - For all parameters regarding the QR code invoice, see the parameters [of the PayQR Swiss Typst package](https://github.com/philippdrebes/typst-payqr-swiss/tree/v0.4.1?tab=readme-ov-file#parameters).
-- It is recommended to always check if the generated QR code is valid by scanning it when changing invoice information.
+- Always check if the generated QR code is valid by scanning it.
 
 ## Acknowledgements
 
